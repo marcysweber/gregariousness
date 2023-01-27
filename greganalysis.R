@@ -2071,15 +2071,34 @@ multiplot(fig7A, fig7B, fig7C, cols = 2)
 
 #Figure 8: variance in intake, alt scenarios
 ######
-newheatmap8data <- output8
-
-ggplot(newheatmap8data, aes(x = tgt.dist, y = patch.regrowth.interval, 
+newheatmap8Adata <- output8A
+newheatmap8Bdata <- output8
+fig8A <- ggplot(newheatmap8Adata, aes(x = tgt.dist, y = extraction.rate.mean, 
+                                      fill = var.energy.intake.monthly)) +
+  geom_tile()+
+  #scale_y_discrete(labels = tgtdist.scale, breaks = everyother) +
+  #scale_x_discrete(labels = tgtneighbor.breaks, breaks = everyother, guide = guide_axis(n.dodge = 1, angle = 45)) +
+  scale_fill_distiller(palette = "YlGn", direction = 1) +
+  labs(fill = "var in\nintake", title = "A.") + 
+  xlab("target distance")+
+  ylab("extraction rate (mean)") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+fig8B <- ggplot(newheatmap8Bdata, aes(x = tgt.dist, y = patch.regrowth.interval, 
                              fill = var.energy.intake.monthly)) +
   geom_tile()+
   #scale_y_discrete(labels = tgtdist.scale, breaks = everyother) +
   #scale_x_discrete(labels = tgtneighbor.breaks, breaks = everyother, guide = guide_axis(n.dodge = 1, angle = 45)) +
   scale_fill_distiller(palette = "YlGn", direction = 1) +
-  labs(fill = "var in\nintake", title = "") + 
+  labs(fill = "var in\nintake", title = "B.") + 
   xlab("target distance")+
   ylab("patch regrowth interval") +
   theme(
@@ -2092,6 +2111,7 @@ ggplot(newheatmap8data, aes(x = tgt.dist, y = patch.regrowth.interval,
     panel.grid.minor = element_blank(), 
     panel.background = element_rect(fill = "white", color = "gray50")
   )
+multiplot(fig8A, fig8B, cols = 2)
 #####
 
 
