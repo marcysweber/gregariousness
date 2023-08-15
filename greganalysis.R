@@ -2806,6 +2806,36 @@ multiplot(fig5A, fig5B, cols = 2)
 
 
 
+#new figure 6 - just needs to fix one label
+#########
+figure5data <- analysisgregchhypo1scatter[analysisgregchhypo1scatter$metric == "var-energy-intake-monthly_mean",]
+figure5data$number <- c(2, 4, 6, 8, 7, 1, 9, 5, 10, 3)
+figure5data$readable.params <- c("abundance", #2
+                                 "clump size", #4
+                                 "energy per capita",#6
+                                 "extraction rate (mean)", #8
+                                 "extraction rate (SD)", #7
+                                 "movement speed",#1 
+                                 "patch regrowth interval",#9
+                                 "mean patch quality", #5
+                                 "target distance",#10
+                                 "target neighbors") #3
+
+ggplot(figure5data, aes(x = mustar, y = sigma, label = parameter)) +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>0.3, as.character(readable.params),number)), size = 5) +
+  #labs(title = "Sensitivity analysis for variance in intake") +
+  xlab(paste("\u03BC", "*"))+
+  ylab("\u03C3 ") +
+  theme(
+    axis.title = element_text(size = 20),
+    axis.text = element_text(size = 14, color = "black"),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  ) 
+#####
+
 #new figures 7 and 8 - reverse color gradient, fix label
 ########
 
