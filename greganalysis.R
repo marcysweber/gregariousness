@@ -1,6 +1,7 @@
 library(nlrx)
 library(sensitivity)
-library(ggplot2)
+library(ggplot2) 
+library(grid)
 
 #######################################################
 #making population density relative to resource abundance
@@ -1995,6 +1996,9 @@ fig5C <- ggplot(newheatmap5Cdata, aes(x = clump.size, y = qual.mean,
   )
 multiplot(fig5A, fig5B, fig5C, cols = 2)
 
+multiplot(fig5A, fig5B, cols = 2)
+
+
 #####
 
 #Figure 7: variance in intake, general scenario
@@ -2024,15 +2028,15 @@ fig7A <- ggplot(newheatmap7Adata, aes(x = extraction.rate.mean, y = patch.regrow
     panel.background = element_rect(fill = "white", color = "gray50")
   )
 
-fig7B <- ggplot(newheatmap7Bdata, aes(x = extraction.rate.mean, y = tgt.dist, 
+fig7B <- ggplot(newheatmap7Bdata, aes(x = tgt.dist, y = extraction.rate.mean, 
                                       fill = var.energy.intake.monthly)) +
   geom_tile()+
   #scale_y_discrete(labels = tgtdist.scale, breaks = everyother) +
   #scale_x_discrete(labels = tgtneighbor.breaks, breaks = everyother, guide = guide_axis(n.dodge = 1, angle = 45)) +
   scale_fill_distiller(palette = "YlGn", direction = 1) +
   labs(fill = "var in\nintake", title = "B.") + 
-  xlab("extraction rate (mean)")+
-  ylab("target distance") +
+  ylab("extraction rate (mean)")+
+  xlab("target distance") +
   theme(
     axis.title = element_text(size = 10, color = "black"),
     axis.text = element_text(size = 8, color = "black"),
@@ -2066,6 +2070,7 @@ fig7C <- ggplot(newheatmap7Cdata, aes(x = tgt.dist, y = patch.regrowth.interval,
   )
 
 multiplot(fig7A, fig7B, fig7C, cols = 2)
+multiplot(fig7B, fig7C, cols = 2)
 
 #####
 
@@ -2223,3 +2228,761 @@ b<- ggplot(resultsgregchhypo1, aes(x = `mean [timemove] of primates / ticks`)) +
 
 multiplot(a, b, cols = 2)
 #####
+
+################################################
+####################################################
+######################################################
+################# july/august 2023 new analysis ########
+
+
+#new figure 3 - comparison between MEEs for intake and distance
+#####
+figure3Adata <- analysisgregchhypo1scatter[analysisgregchhypo1scatter$metric == "foraging-efficiency-time_mean",]
+figure3Bdata <- analysisgregchhypo1scatter[analysisgregchhypo1scatter$metric == "mean-distance-traveled_mean",]
+
+figure3Adata$number <- c(1, 4, 5, 8, 3, 2, 9, 10, 7, 6)
+figure3Adata$readable.params <- c("abundance", #1
+                                 "clump size", #4
+                                 "energy per capita", #5
+                                 "extraction rate (mean)", #8
+                                 "extraction rate (SD)", #3
+                                 "movement speed", #2
+                                 "patch regrowth interval",#9
+                                 "mean patch quality",#10
+                                 "target distance", #7
+                                 "target neighbors") #6
+
+figure3Bdata$number <- c(1, 4, 5, 8, 3, 2, 9, 10, 7, 6)
+figure3Bdata$readable.params <- c("abundance", #1
+                                  "clump size", #4
+                                  "energy per capita", #5
+                                  "extraction rate (mean)", #8
+                                  "extraction rate (SD)", #3
+                                  "movement speed", #2
+                                  "patch regrowth interval",#9
+                                  "mean patch quality",#10
+                                  "target distance", #7
+                                  "target neighbors") #6
+
+
+fig3A <- ggplot(figure3Adata, aes(x = mustar, y = sigma, label = parameter)) +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>1.1, as.character(readable.params),number)), size = 5) +
+  labs(title = "A. energy intake rate") +
+  xlab(paste("\u03BC", "*"))+
+  ylab("\u03C3 ") +
+  scale_x_continuous(expand = c(0.1,0.1))+
+  theme(
+    axis.title = element_text(size = 20, color = "black"),
+    axis.text = element_text(size = 14, color = "black"),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  )
+
+fig3B <-ggplot(figure3Bdata, aes(x = mustar, y = sigma, label = parameter)) +
+  geom_point() + geom_text_repel(aes(label=ifelse(sigma>20000, as.character(readable.params),number)), size = 5) +
+  labs(title = "B. daily distance traveled") +
+  xlab(paste("\u03BC", "*"))+
+  ylab("\u03C3 ") +
+  scale_x_continuous(expand = c(0.1,0.1))+
+  theme(
+    axis.title = element_text(size = 20, color = "black"),
+    axis.text = element_text(size = 14, color = "black"),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  )
+
+multiplot(fig3A, fig3B, cols = 2)
+
+#####
+
+#new figure 4 - heatmaps of distance traveled
+#####
+#first need to look at energy per capita
+ggplot(resultsgregchhypo1, aes(x = `energy-per-capita`, y = `extraction-rate-mean`, fill = log10(`mean-distance-traveled`))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightblue", high = "navy", guide = "colorbar")+
+  labs(title = "A.", fill = "log \ndistance\ntraveled") +
+  # xlab("target neighbors")+
+  # ylab("target distance") +  
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  )
+
+ggplot(resultsgregchhypo1, aes(x = `energy-per-capita`, y = `patch-regrowth-freq`, fill = log10(`mean-distance-traveled`))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightblue", high = "navy", guide = "colorbar")+
+  labs(title = "A.", fill = "log \ndistance\ntraveled") +
+  # xlab("target neighbors")+
+  # ylab("target distance") +  
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  )
+
+ggplot(resultsgregchhypo1, aes(x = `energy-per-capita`, y = `extraction-rate-mean`, fill = log10(`mean-distance-traveled`))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightblue", high = "navy", guide = "colorbar")+
+  labs(title = "A.", fill = "log \ndistance\ntraveled") +
+  # xlab("target neighbors")+
+  # ylab("target distance") +  
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  )
+
+ggplot(resultsgregchhypo1, aes(x = `energy-per-capita`, y = `tgt-dist`, fill = log10(`mean-distance-traveled`))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightblue", high = "navy", guide = "colorbar")+
+  labs(title = "A.", fill = "log \ndistance\ntraveled") +
+  # xlab("target neighbors")+
+  # ylab("target distance") +  
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  )
+
+ggplot(resultsgregchhypo1, aes(x = `energy-per-capita`, y = `tgt-neighbor`, fill = log10(`mean-distance-traveled`))) +
+  geom_tile()+
+  scale_fill_gradient(low = "lightblue", high = "navy", guide = "colorbar")+
+  labs(title = "A.", fill = "log \ndistance\ntraveled") +
+  # xlab("target neighbors")+
+  # ylab("target distance") +  
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  )
+
+
+#### now look at new detailed energy per capita results
+
+epc_extraction <- read.csv("C:/Users/Marcy/Desktop/Marcy dissertatin stuff/july 2023 new greg results/gregariousnessmodel heatmaps - energy per capita x extraction rate-table.csv", skip = 6)
+epc_regrow <- read.csv("C:/Users/Marcy/Desktop/Marcy dissertatin stuff/july 2023 new greg results/gregariousnessmodel heatmaps - energy per capita x regrowth int-table.csv", skip = 6)
+epc_tgtdist <- read.csv("C:/Users/Marcy/Desktop/Marcy dissertatin stuff/july 2023 new greg results/gregariousnessmodel heatmaps - energy per capita x tgt dist-table.csv", skip = 6)
+epc_tgtneigh <- read.csv("C:/Users/Marcy/Desktop/Marcy dissertatin stuff/july 2023 new greg results/gregariousnessmodel heatmaps - energy per capita x tgt neighbors-table.csv", skip = 6)
+
+breaks <- c(150, 250, 500, 1000, 1500)
+fig.epcext <- ggplot(epc_extraction, aes(x = extraction.rate.mean, y = energy.per.capita, 
+                                      fill = (mean.distance.traveled / 17.9))) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "B.")+
+  xlab("extraction rate (mean)")+
+  ylab("energy per capita") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+fig.epcext
+
+fig.epcint <- ggplot(epc_regrow, aes(x = energy.per.capita, y = patch.regrowth.interval, 
+                                     fill = (mean.distance.traveled / 17.9))) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "A.")+
+  xlab("energy per capita")+
+  ylab("patch regrowth interval") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+fig.epcint
+
+fig.epcdist <- ggplot(epc_tgtdist, aes(x = tgt.dist, y = energy.per.capita, 
+                                       fill = (mean.distance.traveled / 17.9))) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "A.")+
+  xlab("target distance")+
+  ylab("energy per capita") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+fig.epcdist
+
+fig.epcneigh <- ggplot(epc_tgtneigh, aes(x = tgt.neighbor, y = energy.per.capita, 
+                                         fill = (mean.distance.traveled / 17.9))) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "A.")+
+  xlab("target neighbors")+
+  ylab("energy per capita") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+fig.epcneigh
+
+
+newheatmap4Adata <- output4A #tgt-neighbors and tgt-dist
+newheatmap4Bdata <- output4B7A #extraction rate x patch regrowth int
+newheatmap4Cdata <- output4C #extraction rate x patch quality
+newheatmap4Ddata <- output4D #tgt-neighbors x extraction rate
+newheatmap4Edata <- output4E #tgt-neighbors x patch regrwoth int
+newheatmap4Fdata <- output4F7C #tgt-dist x patch regrowth int
+
+fig4A <- ggplot(newheatmap4Adata, aes(x = tgt.neighbor, y = tgt.dist, 
+                                      fill = (mean.distance.traveled / 17.9))) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "A.")+
+  xlab("target neighbors")+
+  ylab("target distance") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+
+
+fig4B <- ggplot(newheatmap4Bdata, aes(x = extraction.rate.mean, y = patch.regrowth.interval, 
+                                      fill = (mean.distance.traveled / 17.9))) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "C.")+
+  xlab("extraction rate (mean)")+
+  ylab("patch regrowth interval") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+
+
+#tgt-neighbors x extraction rate
+fig4D <- ggplot(newheatmap4Ddata, aes(x = tgt.neighbor, y = extraction.rate.mean, 
+                                      fill = (mean.distance.traveled / 17.9))) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "D.")+
+  xlab("target neighbors")+
+  ylab("extraction rate (mean)") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+#tgt-neighbors x patch regrwoth int
+fig4E <- ggplot(newheatmap4Edata, aes(x = tgt.neighbor, y = patch.regrowth.interval, 
+                                      fill = (mean.distance.traveled / 17.9))) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "E.")+
+  xlab("target neighbors")+
+  ylab("patch regrowth interval") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+fig4F <- ggplot(newheatmap4Fdata, aes(x = tgt.dist, y = patch.regrowth.interval, 
+                                      fill = (mean.distance.traveled / 17.9))) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "F.")+
+  xlab("target distance")+
+  ylab("patch regrowth interval") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+multiplot(fig4A, fig4B, fig4C, fig4D, fig4E, fig4F, cols = 2)
+
+
+multiplot(fig4A, fig4B, fig.epcint,  fig4E, fig.epcneigh, fig4F,  cols = 2)
+
+#additional heatmaps for appendix
+multiplot(fig.epcint, fig4D, fig.epcdist, cols = 2)
+
+
+#new figure 4 for main text
+multiplot(fig4A, fig.epcext, fig4B, fig4D, fig4E, fig4F, cols = 2)
+
+
+#################
+
+
+#for appendix - MEEs of different scenarios, distance and intake
+#####
+
+figure3data <- analysisgregchhypo1p2scatter[analysisgregchhypo1p2scatter$metric == "mean-distance-traveled_mean",]
+figure3data$number <- 1:10
+figure3data$readable.params <- c("abundance", 
+                                 "clump size", 
+                                 "energy per capita",
+                                 "extraction rate (mean)", 
+                                 "extraction rate (SD)", 
+                                 "movement speed", 
+                                 "frequency of patch regrowth",
+                                 "mean patch quality",
+                                 "target distance",
+                                 "target neighbors")
+
+a <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>10000, as.character(readable.params),number)), size = 5) +
+  labs(title = "MEE for distance traveled, Scenario B") +
+  xlab(paste("\u03BC", "*"))+
+  ylab("\u03C3 ") +
+  theme(
+    axis.title = element_text(size = 20),
+    axis.text = element_text(size = 14),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  )
+
+figure3data <- analysisgregchhypo1p2scatter[analysisgregchhypo1p2scatter$metric == "foraging-efficiency-time_mean",]
+figure3data$number <- 1:10
+figure3data$readable.params <- c("abundance", 
+                                 "clump size", 
+                                 "energy per capita",
+                                 "extraction rate (mean)", 
+                                 "extraction rate (SD)", 
+                                 "movement speed", 
+                                 "frequency of patch regrowth",
+                                 "mean patch quality",
+                                 "target distance",
+                                 "target neighbors")
+
+b <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>0.2, as.character(readable.params),number)), size = 5) +
+  labs(title = "MEE for energy intake, Scenario B") +
+  xlab(paste("\u03BC", "*"))+
+  ylab("\u03C3 ") +
+  theme(
+    axis.title = element_text(size = 20),
+    axis.text = element_text(size = 14),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  )
+
+
+figure3data <- analysisgregchhypo1p3scatter[analysisgregchhypo1p3scatter$metric == "mean-distance-traveled_mean",]
+figure3data$number <- 1:10
+figure3data$readable.params <- c("abundance", 
+                                 "clump size", 
+                                 "energy per capita",
+                                 "extraction rate (mean)", 
+                                 "extraction rate (SD)", 
+                                 "movement speed", 
+                                 "frequency of patch regrowth",
+                                 "mean patch quality",
+                                 "target distance",
+                                 "target neighbors")
+
+c <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>10000, as.character(readable.params),number)), size = 5) +
+  labs(title = "MEE for distance traveled, Scenario C") +
+  xlab(paste("\u03BC", "*"))+
+  ylab("\u03C3 ") +
+  theme(
+    axis.title = element_text(size = 20),
+    axis.text = element_text(size = 14),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  )
+
+figure3data <- analysisgregchhypo1p3scatter[analysisgregchhypo1p3scatter$metric == "foraging-efficiency-time_mean",]
+figure3data$number <- 1:10
+figure3data$readable.params <- c("abundance", 
+                                 "clump size", 
+                                 "energy per capita",
+                                 "extraction rate (mean)", 
+                                 "extraction rate (SD)", 
+                                 "movement speed", 
+                                 "frequency of patch regrowth",
+                                 "mean patch quality",
+                                 "target distance",
+                                 "target neighbors")
+
+d <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>0.2, as.character(readable.params),number)), size = 5) +
+  labs(title = "MEE for energy intake, Scenario C") +
+  xlab(paste("\u03BC", "*"))+
+  ylab("\u03C3 ") +
+  theme(
+    axis.title = element_text(size = 20),
+    axis.text = element_text(size = 14),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  )
+
+multiplot(a, b, c, d, cols = 2)
+#####
+
+#new figure 5 - heatmaps of distance traveled in fast-extracting, slow-renewing 
+#and slow-extracting, fast-renewing scenarios
+#####
+
+newheatmap5Adata <- output5A #tgt-neighbors x tgt-dist
+newheatmap5Bdata <- output5B #tgt-neighbors x tgt-dist
+newheatmap5Cdata <- output5C #clump size x patch quality
+scenarioBclumpxpatch <- read.csv("C:/Users/Marcy/Desktop/Marcy dissertatin stuff/july 2023 new greg results/gregariousnessmodel scenarioBclumpxpatch-table.csv", skip = 6)
+
+fig5A <- ggplot(newheatmap5Adata, aes(x = tgt.neighbor, y = tgt.dist, 
+                                      fill = mean.distance.traveled / 17.9)) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn",  trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "A.")+
+  xlab("target neighbors")+
+  ylab("target distance") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+
+  
+fig5B <- ggplot(scenarioBclumpxpatch, aes(x = clump.size, y = qual.mean, 
+                                      fill = mean.distance.traveled / 17.9)) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "B.")+
+  xlab("clump size")+
+  ylab("patch quality") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+fig5C <- ggplot(newheatmap5Bdata, aes(x = tgt.neighbor, y = tgt.dist, 
+                                      fill = mean.distance.traveled / 17.9)) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "C.")+
+  xlab("target neighbors")+
+  ylab("target distance") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+fig5D <- ggplot(newheatmap5Cdata, aes(x = clump.size, y = qual.mean, 
+                                      fill = mean.distance.traveled / 17.9)) +
+  geom_tile()+
+  scale_fill_distiller(palette = "YlGn",  trans = "log10", breaks = breaks) +
+  labs(fill = "daily\ndistance\ntraveled", title = "D.")+
+  xlab("clump size")+
+  ylab("patch quality") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+multiplot(fig5A, fig5B, fig5C, fig5D, cols = 2)
+
+multiplot(fig5A, fig5B, cols = 2)
+
+
+
+
+
+
+
+
+
+
+
+#new figures 7 and 8 - reverse color gradient, fix label
+########
+
+fig7A <- ggplot(newheatmap7Adata, aes(x = extraction.rate.mean, y = patch.regrowth.interval, 
+                                      fill = var.energy.intake.monthly)) +
+  geom_tile()+
+  #scale_y_discrete(labels = tgtdist.scale, breaks = everyother) +
+  #scale_x_discrete(labels = tgtneighbor.breaks, breaks = everyother, guide = guide_axis(n.dodge = 1, angle = 45)) +
+  scale_fill_distiller(palette = "YlGn") +
+  labs(fill = "variance\nin intake", title = "A.") + 
+  xlab("extraction rate (mean)")+
+  ylab("patch regrowth interval") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+fig7B <- ggplot(newheatmap7Bdata, aes(x = tgt.dist, y = extraction.rate.mean, 
+                                      fill = var.energy.intake.monthly)) +
+  geom_tile()+
+  #scale_y_discrete(labels = tgtdist.scale, breaks = everyother) +
+  #scale_x_discrete(labels = tgtneighbor.breaks, breaks = everyother, guide = guide_axis(n.dodge = 1, angle = 45)) +
+  scale_fill_distiller(palette = "YlGn") +
+  labs(fill = "variance\nin intake", title = "B.") + 
+  ylab("extraction rate (mean)")+
+  xlab("target distance") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+fig7C <- ggplot(newheatmap7Cdata, aes(x = tgt.dist, y = patch.regrowth.interval, 
+                                      fill = var.energy.intake.monthly)) +
+  geom_tile()+
+  #scale_y_discrete(labels = tgtdist.scale, breaks = everyother) +
+  #scale_x_discrete(labels = tgtneighbor.breaks, breaks = everyother, guide = guide_axis(n.dodge = 1, angle = 45)) +
+  scale_fill_distiller(palette = "YlGn") +
+  labs(fill = "variance\nin intake", title = "C.") + 
+  xlab("target distance")+
+  ylab("patch regrowth interval") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+
+multiplot(fig7A, fig7B, fig7C, cols = 2)
+
+
+
+
+
+
+
+fig8A <- ggplot(newheatmap8Adata, aes(x = tgt.dist, y = extraction.rate.mean, 
+                                      fill = var.energy.intake.monthly)) +
+  geom_tile()+
+  #scale_y_discrete(labels = tgtdist.scale, breaks = everyother) +
+  #scale_x_discrete(labels = tgtneighbor.breaks, breaks = everyother, guide = guide_axis(n.dodge = 1, angle = 45)) +
+  scale_fill_distiller(palette = "YlGn") +
+  labs(fill = "variance\nin intake", title = "A.") + 
+  xlab("target distance")+
+  ylab("extraction rate (mean)") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+fig8B <- ggplot(newheatmap8Bdata, aes(x = tgt.dist, y = patch.regrowth.interval, 
+                                      fill = var.energy.intake.monthly)) +
+  geom_tile()+
+  #scale_y_discrete(labels = tgtdist.scale, breaks = everyother) +
+  #scale_x_discrete(labels = tgtneighbor.breaks, breaks = everyother, guide = guide_axis(n.dodge = 1, angle = 45)) +
+  scale_fill_distiller(palette = "YlGn") +
+  labs(fill = "variance\nin intake", title = "B.") + 
+  xlab("target distance")+
+  ylab("patch regrowth interval") +
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 8, color = "black"),
+    legend.text = element_text(size = 8),
+    legend.title = element_text(size = 10),
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(), 
+    panel.background = element_rect(fill = "white", color = "gray50")
+  )
+multiplot(fig8A, fig8B, cols = 2)
+
+
+
+
+
+########
+
+#new figure 9, with distance instead of efficiency
+#######
+
+resultsgregchhypo1$scenario <- rep("general", times = 792)
+resultsgregchhypo1p2$scenario <- rep("fast-extracting, slow-renewing", times = 792)
+resultsgregchhypo1p3$scenario <- rep("slow-extracting, fast-renewing", times = 792)
+
+compare.scenarios.data <- data.frame()
+
+compare.scenarios.data <- rbind(resultsgregchhypo1, resultsgregchhypo1p2, resultsgregchhypo1p3)
+
+
+
+
+a <- ggplot(compare.scenarios.data, aes(x = factor(scenario, level =c("general", "fast-extracting, slow-renewing", "slow-extracting, fast-renewing")), 
+                                        y = log(`mean-distance-traveled` / 17.9))) +
+  geom_violin(fill = "gray50") +
+  labs(title = "A.")+
+  xlab("resource scenario")+
+  ylab("log daily distance traveled") +
+  scale_x_discrete(breaks = c("general", 
+                              "fast-extracting, slow-renewing", 
+                              "slow-extracting, fast-renewing"), 
+                   labels=(c("general", "fast-extract\nslow-renew", "slow-extract\nfast-renew")))+
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 7, color = "black"),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  ) 
+
+
+
+
+b <- ggplot(compare.scenarios.data, aes(x = factor(scenario, level = c("general", "fast-extracting, slow-renewing", "slow-extracting, fast-renewing")), 
+                                        y = log(`var-energy-intake-monthly`))) +
+  geom_violin(fill = "gray50")+
+  labs(title = "B.")+
+  xlab("resource scenario")+
+  ylab("log variance in intake") +
+  scale_x_discrete(breaks = c("general", 
+                              "fast-extracting, slow-renewing", 
+                              "slow-extracting, fast-renewing"), 
+                   labels=(c("general", "fast-extract\nslow-renew", "slow-extract\nfast-renew")))+
+  theme(
+    axis.title = element_text(size = 10, color = "black"),
+    axis.text = element_text(size = 7, color = "black"),
+    
+    panel.grid = element_line(color = "black"),
+    panel.grid.major = element_line(color = "gray75"),
+    panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
+  ) 
+
+multiplot(a, b, cols = 2)
+
+
+
+#####
+
+##############

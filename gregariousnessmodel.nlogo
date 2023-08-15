@@ -1603,7 +1603,7 @@ abundance
 abundance
 1000
 1000000
-873000.0
+500000.0
 1000
 1
 NIL
@@ -1618,7 +1618,7 @@ clump-size
 clump-size
 0
 1000
-967.0
+991.0
 1
 1
 NIL
@@ -1633,7 +1633,7 @@ qual-mean
 qual-mean
 0
 200
-100.0
+146.0
 1
 1
 NIL
@@ -1648,7 +1648,7 @@ qual-sd
 qual-sd
 0
 20
-5.0
+1.0
 1
 1
 NIL
@@ -1775,7 +1775,7 @@ tgt-dist
 tgt-dist
 1
 50
-12.0
+25.0
 1
 1
 NIL
@@ -1790,7 +1790,7 @@ tgt-neighbor
 tgt-neighbor
 -1
 9
-4.0
+3.0
 1
 1
 NIL
@@ -1843,7 +1843,7 @@ SWITCH
 546
 group-recog-module?
 group-recog-module?
-0
+1
 1
 -1000
 
@@ -1856,7 +1856,7 @@ extraction-rate-mean
 extraction-rate-mean
 1
 20
-3.0
+9.5
 1
 1
 NIL
@@ -1905,7 +1905,7 @@ other-primate-detection-radius
 other-primate-detection-radius
 5
 100
-70.0
+50.0
 1
 1
 NIL
@@ -1920,7 +1920,7 @@ resource-detection-radius
 resource-detection-radius
 5
 100
-70.0
+50.0
 1
 1
 NIL
@@ -1950,7 +1950,7 @@ patch-regrowth-interval
 patch-regrowth-interval
 1000
 3000
-1500.0
+2750.0
 100
 1
 NIL
@@ -1965,7 +1965,7 @@ movement-noise
 movement-noise
 10
 45
-20.0
+10.0
 1
 1
 NIL
@@ -1995,7 +1995,7 @@ energy-per-capita
 energy-per-capita
 0
 10000
-10000.0
+9000.0
 250
 1
 NIL
@@ -6364,6 +6364,130 @@ NetLogo 6.2.2
     <steppedValueSet variable="clump-size" first="1" step="90" last="1000"/>
     <enumeratedValueSet variable="patch-regrowth-interval">
       <value value="1500"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="heatmaps - energy per capita x regrowth int" repetitions="5" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="4300"/>
+    <metric>foraging-efficiency-time</metric>
+    <metric>foraging-efficiency-dist</metric>
+    <metric>mean-distance-traveled</metric>
+    <metric>var-energy-intake-daily</metric>
+    <metric>var-energy-intake-monthly</metric>
+    <metric>mean [timemove] of primates / ticks</metric>
+    <metric>count primates</metric>
+    <enumeratedValueSet variable="abundance">
+      <value value="500000"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="energy-per-capita" first="4000" step="500" last="9000"/>
+    <enumeratedValueSet variable="extraction-rate-sd">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="resource-tests-on?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="extraction-rate-mean">
+      <value value="7"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="qual-sd">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="tgt-dist">
+      <value value="25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="other-primate-detection-radius">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="qual-mean">
+      <value value="100"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="movement-noise">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="go-tests-on?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="move-tests-on?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="tgt-neighbor">
+      <value value="3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="resource-detection-radius">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="regrowth-rate">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="group-recog-module?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="clump-size">
+      <value value="500"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="patch-regrowth-interval" first="1000" step="181" last="3000"/>
+  </experiment>
+  <experiment name="scenarioBclumpxpatch" repetitions="5" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="4300"/>
+    <metric>foraging-efficiency-time</metric>
+    <metric>foraging-efficiency-dist</metric>
+    <metric>mean-distance-traveled</metric>
+    <metric>var-energy-intake-daily</metric>
+    <metric>var-energy-intake-monthly</metric>
+    <metric>mean [timemove] of primates / ticks</metric>
+    <metric>count primates</metric>
+    <enumeratedValueSet variable="abundance">
+      <value value="500000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="energy-per-capita">
+      <value value="9000"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="extraction-rate-sd">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="resource-tests-on?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="extraction-rate-mean">
+      <value value="9.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="qual-sd">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="tgt-dist">
+      <value value="25"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="other-primate-detection-radius">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="qual-mean" first="25" step="11" last="150"/>
+    <enumeratedValueSet variable="movement-noise">
+      <value value="10"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="go-tests-on?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="move-tests-on?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="tgt-neighbor">
+      <value value="3"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="resource-detection-radius">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="regrowth-rate">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="group-recog-module?">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="clump-size" first="1" step="90" last="1000"/>
+    <enumeratedValueSet variable="patch-regrowth-interval">
+      <value value="2750"/>
     </enumeratedValueSet>
   </experiment>
 </experiments>
