@@ -1459,14 +1459,14 @@ figure9data$readable.params <- c("abundance",
                                  "extraction rate (mean)", 
                                  "extraction rate (SD)", 
                                  "movement speed", 
-                                 "frequency of patch regrowth",
+                                 "patch regrowth interval",
                                  "mean patch quality",
                                  "target distance",
                                  "target neighbors")
 
-ggplot(figure9data, aes(x = mustar, y = sigma, label = parameter)) +
+a<-ggplot(figure9data, aes(x = mustar, y = sigma, label = parameter)) +
   geom_point() + geom_text_repel(aes(label=ifelse(mustar>0.2, as.character(readable.params),number)), size = 5) +
-  labs(title = "MEE for variance in intake, Scenario B") +
+  labs(title = "A.") +
   xlab(paste("\u03BC", "*"))+
   ylab("\u03C3 ") +
   theme(
@@ -1528,14 +1528,14 @@ figure11data$readable.params <- c("abundance",
                                  "extraction rate (mean)", 
                                  "extraction rate (SD)", 
                                  "movement speed", 
-                                 "frequency of patch regrowth",
+                                 "patch regrowth interval",
                                  "mean patch quality",
                                  "target distance",
                                  "target neighbors")
 
-ggplot(figure11data, aes(x = mustar, y = sigma, label = parameter)) +
+b<-ggplot(figure11data, aes(x = mustar, y = sigma, label = parameter)) +
   geom_point() + geom_text_repel(aes(label=ifelse(mustar>0.02, as.character(readable.params),number)), size = 5) +
-  labs(title = "MEE for variance in intake, Scenario C") +
+  labs(title = "B.") +
   xlab(paste("\u03BC", "*"))+
   ylab("\u03C3 ") +
   theme(
@@ -1546,7 +1546,7 @@ ggplot(figure11data, aes(x = mustar, y = sigma, label = parameter)) +
     panel.grid.major = element_line(color = "gray75"),
     panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
   ) 
-
+ multiplot(a,b, cols=2)
 
 
 
@@ -2267,7 +2267,7 @@ figure3Bdata$readable.params <- c("abundance", #1
 
 fig3A <- ggplot(figure3Adata, aes(x = mustar, y = sigma, label = parameter)) +
   geom_point() + geom_text_repel(aes(label=ifelse(mustar>1.1, as.character(readable.params),number)), size = 5) +
-  labs(title = "A. energy intake rate") +
+  labs(title = "A.") +
   xlab(paste("\u03BC", "*"))+
   ylab("\u03C3 ") +
   scale_x_continuous(expand = c(0.1,0.1))+
@@ -2282,7 +2282,7 @@ fig3A <- ggplot(figure3Adata, aes(x = mustar, y = sigma, label = parameter)) +
 
 fig3B <-ggplot(figure3Bdata, aes(x = mustar, y = sigma, label = parameter)) +
   geom_point() + geom_text_repel(aes(label=ifelse(sigma>20000, as.character(readable.params),number)), size = 5) +
-  labs(title = "B. daily distance traveled") +
+  labs(title = "B.") +
   xlab(paste("\u03BC", "*"))+
   ylab("\u03C3 ") +
   scale_x_continuous(expand = c(0.1,0.1))+
@@ -2416,13 +2416,13 @@ fig.epcext <- ggplot(epc_extraction, aes(x = extraction.rate.mean, y = energy.pe
 
 fig.epcext
 
-fig.epcint <- ggplot(epc_regrow, aes(x = energy.per.capita, y = patch.regrowth.interval, 
+fig.epcint <- ggplot(epc_regrow, aes(y = energy.per.capita, x = patch.regrowth.interval, 
                                      fill = (mean.distance.traveled / 17.9))) +
   geom_tile()+
   scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
   labs(fill = "daily\ndistance\ntraveled", title = "A.")+
-  xlab("energy per capita")+
-  ylab("patch regrowth interval") +
+  ylab("energy per capita")+
+  xlab("patch regrowth interval") +
   theme(
     axis.title = element_text(size = 10, color = "black"),
     axis.text = element_text(size = 8, color = "black"),
@@ -2440,7 +2440,7 @@ fig.epcdist <- ggplot(epc_tgtdist, aes(x = tgt.dist, y = energy.per.capita,
                                        fill = (mean.distance.traveled / 17.9))) +
   geom_tile()+
   scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
-  labs(fill = "daily\ndistance\ntraveled", title = "A.")+
+  labs(fill = "daily\ndistance\ntraveled", title = "B.")+
   xlab("target distance")+
   ylab("energy per capita") +
   theme(
@@ -2460,7 +2460,7 @@ fig.epcneigh <- ggplot(epc_tgtneigh, aes(x = tgt.neighbor, y = energy.per.capita
                                          fill = (mean.distance.traveled / 17.9))) +
   geom_tile()+
   scale_fill_distiller(palette = "YlGn", trans = "log10", breaks = breaks) +
-  labs(fill = "daily\ndistance\ntraveled", title = "A.")+
+  labs(fill = "daily\ndistance\ntraveled", title = "C.")+
   xlab("target neighbors")+
   ylab("energy per capita") +
   theme(
@@ -2586,7 +2586,7 @@ multiplot(fig4A, fig4B, fig4C, fig4D, fig4E, fig4F, cols = 2)
 multiplot(fig4A, fig4B, fig.epcint,  fig4E, fig.epcneigh, fig4F,  cols = 2)
 
 #additional heatmaps for appendix
-multiplot(fig.epcint, fig4D, fig.epcdist, cols = 2)
+multiplot(fig.epcint, fig.epcdist, fig.epcneigh, cols = 2)
 
 
 #new figure 4 for main text
@@ -2613,8 +2613,8 @@ figure3data$readable.params <- c("abundance",
                                  "target neighbors")
 
 a <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
-  geom_point() + geom_text_repel(aes(label=ifelse(mustar>10000, as.character(readable.params),number)), size = 5) +
-  labs(title = "MEE for distance traveled, Scenario B") +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>10000, as.character(readable.params),number)), size = 3) +
+  labs(title = "A.") +
   xlab(paste("\u03BC", "*"))+
   ylab("\u03C3 ") +
   theme(
@@ -2624,7 +2624,9 @@ a <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
     panel.grid = element_line(color = "black"),
     panel.grid.major = element_line(color = "gray75"),
     panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
-  )
+  ) +
+  xlim(0,100000)+
+  ylim(0,100000)
 
 figure3data <- analysisgregchhypo1p2scatter[analysisgregchhypo1p2scatter$metric == "foraging-efficiency-time_mean",]
 figure3data$number <- 1:10
@@ -2640,8 +2642,8 @@ figure3data$readable.params <- c("abundance",
                                  "target neighbors")
 
 b <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
-  geom_point() + geom_text_repel(aes(label=ifelse(mustar>0.2, as.character(readable.params),number)), size = 5) +
-  labs(title = "MEE for energy intake, Scenario B") +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>0.2, as.character(readable.params),number)), size = 3) +
+  labs(title = "B.") +
   xlab(paste("\u03BC", "*"))+
   ylab("\u03C3 ") +
   theme(
@@ -2651,7 +2653,9 @@ b <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
     panel.grid = element_line(color = "black"),
     panel.grid.major = element_line(color = "gray75"),
     panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
-  )
+  ) +
+  xlim(0,1.7)+
+  ylim(0,1.7)
 
 
 figure3data <- analysisgregchhypo1p3scatter[analysisgregchhypo1p3scatter$metric == "mean-distance-traveled_mean",]
@@ -2668,8 +2672,8 @@ figure3data$readable.params <- c("abundance",
                                  "target neighbors")
 
 c <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
-  geom_point() + geom_text_repel(aes(label=ifelse(mustar>10000, as.character(readable.params),number)), size = 5) +
-  labs(title = "MEE for distance traveled, Scenario C") +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>20000, as.character(readable.params),number)), size = 3) +
+  labs(title = "C.") +
   xlab(paste("\u03BC", "*"))+
   ylab("\u03C3 ") +
   theme(
@@ -2679,7 +2683,9 @@ c <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
     panel.grid = element_line(color = "black"),
     panel.grid.major = element_line(color = "gray75"),
     panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
-  )
+  ) +
+  xlim(0,100000)+
+  ylim(0,100000)
 
 figure3data <- analysisgregchhypo1p3scatter[analysisgregchhypo1p3scatter$metric == "foraging-efficiency-time_mean",]
 figure3data$number <- 1:10
@@ -2695,8 +2701,8 @@ figure3data$readable.params <- c("abundance",
                                  "target neighbors")
 
 d <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
-  geom_point() + geom_text_repel(aes(label=ifelse(mustar>0.2, as.character(readable.params),number)), size = 5) +
-  labs(title = "MEE for energy intake, Scenario C") +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>0.2, as.character(readable.params),number)), size = 3) +
+  labs(title = "D.") +
   xlab(paste("\u03BC", "*"))+
   ylab("\u03C3 ") +
   theme(
@@ -2706,7 +2712,9 @@ d <- ggplot(figure3data, aes(x = mustar, y = sigma, label = parameter)) +
     panel.grid = element_line(color = "black"),
     panel.grid.major = element_line(color = "gray75"),
     panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
-  )
+  ) +
+  xlim(0,1.7)+
+  ylim(0,1.7)
 
 multiplot(a, b, c, d, cols = 2)
 #####
