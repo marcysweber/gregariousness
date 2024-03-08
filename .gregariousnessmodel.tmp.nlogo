@@ -82,7 +82,7 @@ primates-own[
 
   freq-conflict
 
-  exp-score ;; current value of estimated fighting ability, 0.0-1.0
+   ;; current value of estimated fighting ability, 0.0-1.0
   exp-delta-list ;; list recording every time the exp-score was changed by a win or loss
   running-exp-avg ;; average of the exp-delta-list
 
@@ -1618,7 +1618,7 @@ clump-size
 clump-size
 0
 1000
-500.0
+991.0
 1
 1
 NIL
@@ -1633,7 +1633,7 @@ qual-mean
 qual-mean
 0
 200
-100.0
+146.0
 1
 1
 NIL
@@ -1856,7 +1856,7 @@ extraction-rate-mean
 extraction-rate-mean
 1
 20
-7.0
+9.5
 1
 1
 NIL
@@ -1950,7 +1950,7 @@ patch-regrowth-interval
 patch-regrowth-interval
 1000
 3000
-2810.0
+2750.0
 100
 1
 NIL
@@ -2343,7 +2343,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.2.2
+NetLogo 6.4.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -3584,7 +3584,7 @@ NetLogo 6.2.2
       <value value="3"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="popdensforefftests - LAUSPHE" repetitions="2" runMetricsEveryStep="false">
+  <experiment name="popdensforefftests - LAUSPHE (1)" repetitions="2" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="4000"/>
@@ -4922,7 +4922,7 @@ NetLogo 6.2.2
   <experiment name="study2withingroup" repetitions="10" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <final>make_csv_group-level_data</final>
+    <postRun>make_csv_group-level_data</postRun>
     <timeLimit steps="8000"/>
     <metric>foraging-efficiency-time</metric>
     <metric>mean [distance-traveled] of primates</metric>
@@ -5398,10 +5398,10 @@ NetLogo 6.2.2
       <value value="3"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="jan2022ch2study2-midgreg" repetitions="1" runMetricsEveryStep="false">
+  <experiment name="jan2022ch2study2-midgreg (1)" repetitions="1" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <final>make_csv_group-level_data</final>
+    <postRun>make_csv_group-level_data</postRun>
     <timeLimit steps="8000"/>
     <metric>mean [percent-t-in-prox] of primates</metric>
     <metric>mean [foraging-efficiency-time] of primates</metric>

@@ -82,8 +82,8 @@ primates-own[
 
   freq-conflict
 
-  exp-score ;; current value of estimated fighting ability, 0.0-1.0
-  exp-delta-list ;; list recording every time the exp-score was changed by a win or loss
+  xp ;; current value of estimated fighting ability, 0.0-1.0
+  exp-delta-list ;; list recording every time the xp was changed by a win or loss
   running-exp-avg ;; average of the exp-delta-list
 
   wns
@@ -285,7 +285,7 @@ to create_starting_pop ;; creates a beginning population of primate agents, of v
     set metabolism 0
 
     set rhp one-of [1 2 3 4 5 6 7 8]
-    set exp-score 0.50
+    set xp 0.50
     set exp-delta-list (list 0.50)
     set running-exp-avg 0.50
 
@@ -725,7 +725,7 @@ end
 
 to-report cost-estimation [opponent]
 
-  report (([exp-score] of opponent - exp-score) + 1) / 2 ;;; this puts the difference in scores back on a 0.0-1.0 scale
+  report (([xp] of opponent - xp) + 1) / 2 ;;; this puts the difference in scores back on a 0.0-1.0 scale
 end
 
 
@@ -831,13 +831,13 @@ to decay_exp
       set running-exp-avg 1
     ]
   ]
-  ask primates with [exp-score != running-exp-avg] [
-    ifelse exp-score > running-exp-avg [
-      ;; exp-score is higher than the running average
-      set exp-score exp-score - 0.01
+  ask primates with [xp != running-exp-avg] [
+    ifelse xp > running-exp-avg [
+      ;; xp is higher than the running average
+      set xp xp - 0.01
     ][
-      ;; exp-score is lower than the running average
-      set exp-score exp-score + 0.005
+      ;; xp is lower than the running average
+      set xp xp + 0.005
     ]
   ]
 end
@@ -888,10 +888,10 @@ to update_winner_exp
   set wns wns + 1 ;; opponent recalculates their wns counter to increase it by 1
           ;;show "I win! \n"
 
-          ifelse exp-score > 0.98 [
-            set exp-score 1.0
+          ifelse xp > 0.98 [
+            set xp 1.0
           ][
-            set exp-score exp-score + 0.01
+            set xp xp + 0.01
           ]
 end
 
@@ -904,18 +904,18 @@ set daily-distance-traveled daily-distance-traveled + 1
   set lsses (lsses + 1) ;; opponent recalculates their lsses counter to increase it by 1
 
 
-        ;;;; also exp-score stuff here!!!!
-          ifelse exp-score > 0.02 [
-             set exp-score exp-score - 0.01
+        ;;;; also xp stuff here!!!!
+          ifelse xp > 0.02 [
+             set xp xp - 0.01
              ][
-             set exp-score 0.01
+             set xp 0.01
              ]
 
 end
 
 
 to update_exp_list
-      set exp-delta-list fput exp-score exp-delta-list
+      set exp-delta-list fput xp exp-delta-list
 
     ifelse length exp-delta-list > 4 [
       set running-exp-avg mean sublist exp-delta-list 0 5 ;;;;; the running average is only from the 10 most recent wins or losses
@@ -2343,7 +2343,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.2.2
+NetLogo 6.4.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -3584,7 +3584,7 @@ NetLogo 6.2.2
       <value value="3"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="popdensforefftests - LAUSPHE" repetitions="2" runMetricsEveryStep="false">
+  <experiment name="popdensforefftests - LAUSPHE (1)" repetitions="2" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <timeLimit steps="4000"/>
@@ -4922,7 +4922,7 @@ NetLogo 6.2.2
   <experiment name="study2withingroup" repetitions="10" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <final>make_csv_group-level_data</final>
+    <postRun>make_csv_group-level_data</postRun>
     <timeLimit steps="8000"/>
     <metric>foraging-efficiency-time</metric>
     <metric>mean [distance-traveled] of primates</metric>
@@ -5398,10 +5398,10 @@ NetLogo 6.2.2
       <value value="3"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="jan2022ch2study2-midgreg" repetitions="1" runMetricsEveryStep="false">
+  <experiment name="jan2022ch2study2-midgreg (1)" repetitions="1" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
-    <final>make_csv_group-level_data</final>
+    <postRun>make_csv_group-level_data</postRun>
     <timeLimit steps="8000"/>
     <metric>mean [percent-t-in-prox] of primates</metric>
     <metric>mean [foraging-efficiency-time] of primates</metric>
