@@ -2244,7 +2244,7 @@ figure3Adata$number <- c(1, 4, 5, 8, 3, 2, 9, 10, 7, 6)
 figure3Adata$readable.params <- c("abundance", #1
                                  "clump size", #4
                                  "energy per capita", #5
-                                 "extraction rate (mean)", #8
+                                 "extraction rate", #8
                                  "extraction rate (SD)", #3
                                  "movement speed", #2
                                  "patch regrowth interval",#9
@@ -2256,7 +2256,7 @@ figure3Bdata$number <- c(1, 4, 5, 8, 3, 2, 9, 10, 7, 6)
 figure3Bdata$readable.params <- c("abundance", #1
                                   "clump size", #4
                                   "energy per capita", #5
-                                  "extraction rate (mean)", #8
+                                  "extraction rate", #8
                                   "extraction rate (SD)", #3
                                   "movement speed", #2
                                   "patch regrowth interval",#9
@@ -2266,14 +2266,15 @@ figure3Bdata$readable.params <- c("abundance", #1
 
 
 fig3A <- ggplot(figure3Adata, aes(x = mustar, y = sigma, label = parameter)) +
-  geom_point() + geom_text_repel(aes(label=ifelse(mustar>1.1, as.character(readable.params),number)), size = 5) +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>1.1, as.character(readable.params),number)), size = 3) +
   labs(title = "A. energy intake rate") +
   xlab(paste("\u03BC", "*"))+
   ylab("\u03C3 ") +
   scale_x_continuous(expand = c(0.1,0.1))+
+  scale_y_continuous(limits=c(0, 1.6))+
   theme(
-    axis.title = element_text(size = 20, color = "black"),
-    axis.text = element_text(size = 14, color = "black"),
+    axis.title = element_text(size = 16, color = "black"),
+    axis.text = element_text(size = 10, color = "black"),
     
     panel.grid = element_line(color = "black"),
     panel.grid.major = element_line(color = "gray75"),
@@ -2281,21 +2282,27 @@ fig3A <- ggplot(figure3Adata, aes(x = mustar, y = sigma, label = parameter)) +
   )
 
 fig3B <-ggplot(figure3Bdata, aes(x = mustar, y = sigma, label = parameter)) +
-  geom_point() + geom_text_repel(aes(label=ifelse(sigma>20000, as.character(readable.params),number)), size = 5) +
+  geom_point() + geom_text_repel(aes(label=ifelse(sigma>20000, as.character(readable.params),number)), size = 3) +
   labs(title = "B. daily distance traveled") +
   xlab(paste("\u03BC", "*"))+
   ylab("\u03C3 ") +
-  scale_x_continuous(expand = c(0.1,0.1))+
+  scale_x_continuous(expand = c(0.1,0.1), limits = c(10000, 70000))+
+  scale_y_continuous(limits=c(10000, 45000))+
+  
   theme(
-    axis.title = element_text(size = 20, color = "black"),
-    axis.text = element_text(size = 14, color = "black"),
+    axis.title = element_text(size = 16, color = "black"),
+    axis.text = element_text(size = 10, color = "black"),
     
     panel.grid = element_line(color = "black"),
     panel.grid.major = element_line(color = "gray75"),
     panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
   )
 
+
+tiff("Figure_3.tiff", units="cm", width=18, height=8, res=200)
+
 multiplot(fig3A, fig3B, cols = 2)
+dev.off()
 
 #####
 
@@ -2590,7 +2597,9 @@ multiplot(fig.epcint, fig4D, fig.epcdist, cols = 2)
 
 
 #new figure 4 for main text
+tiff("Figure_4.tiff", units="mm", width=180, height=210, res=200)
 multiplot(fig4A, fig.epcext, fig4B, fig4D, fig4E, fig4F, cols = 2)
+dev.off()
 
 
 #################
@@ -2792,7 +2801,12 @@ fig5D <- ggplot(newheatmap5Cdata, aes(x = clump.size, y = qual.mean,
     panel.grid.minor = element_blank(), 
     panel.background = element_rect(fill = "white", color = "gray50")
   )
+
+
+tiff("Figure_5.tiff", units="mm", width=180, height=140, res=200)
 multiplot(fig5A, fig5B, fig5C, fig5D, cols = 2)
+
+dev.off()
 
 multiplot(fig5A, fig5B, cols = 2)
 
@@ -2821,19 +2835,23 @@ figure5data$readable.params <- c("abundance", #2
                                  "target distance",#10
                                  "target neighbors") #3
 
+tiff("Figure_6.tiff", units="mm", width=80, height=80, res=200)
 ggplot(figure5data, aes(x = mustar, y = sigma, label = parameter)) +
-  geom_point() + geom_text_repel(aes(label=ifelse(mustar>0.3, as.character(readable.params),number)), size = 5) +
+  geom_point() + geom_text_repel(aes(label=ifelse(mustar>0.3, as.character(readable.params),number)), size = 3) +
   #labs(title = "Sensitivity analysis for variance in intake") +
   xlab(paste("\u03BC", "*"))+
   ylab("\u03C3 ") +
   theme(
-    axis.title = element_text(size = 20),
-    axis.text = element_text(size = 14, color = "black"),
+    axis.title = element_text(size = 16),
+    axis.text = element_text(size = 10, color = "black"),
     
     panel.grid = element_line(color = "black"),
     panel.grid.major = element_line(color = "gray75"),
     panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
   ) 
+dev.off()
+
+
 #####
 
 #new figures 7 and 8 - reverse color gradient, fix label
@@ -2900,8 +2918,10 @@ fig7C <- ggplot(newheatmap7Cdata, aes(x = tgt.dist, y = patch.regrowth.interval,
     panel.background = element_rect(fill = "white", color = "gray50")
   )
 
-multiplot(fig7A, fig7B, fig7C, cols = 2)
+tiff("Figure_7.tiff", units="mm", width=180, height=140, res=200)
 
+multiplot(fig7A, fig7B, fig7C, cols = 2)
+dev.off()
 
 
 
@@ -2946,8 +2966,11 @@ fig8B <- ggplot(newheatmap8Bdata, aes(x = tgt.dist, y = patch.regrowth.interval,
     panel.grid.minor = element_blank(), 
     panel.background = element_rect(fill = "white", color = "gray50")
   )
-multiplot(fig8A, fig8B, cols = 2)
 
+tiff("Figure_8.tiff", units="mm", width=180, height=70, res=200)
+
+multiplot(fig8A, fig8B, cols = 2)
+dev.off()
 
 
 
@@ -3009,8 +3032,10 @@ b <- ggplot(compare.scenarios.data, aes(x = factor(scenario, level = c("general"
     panel.grid.minor = element_line(color = "gray90"), panel.background = element_rect(fill = "white", color = "gray50"),
   ) 
 
-multiplot(a, b, cols = 2)
+tiff("Figure_9.tiff", units="mm", width=160, height=70, res=200)
 
+multiplot(a, b, cols = 2)
+dev.off()
 
 
 #####
